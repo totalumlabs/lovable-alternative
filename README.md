@@ -90,10 +90,11 @@ Every item below works out of the box with one API key. No Supabase project, no 
 | **Live preview** | The running app updates in the right-hand panel while the agent works. Desktop and phone viewports, route picker, refresh, open in a new tab. |
 | **Visual editing** | Click any element in the preview and change its text, size, colors or image. Edits are written back to the exact file and line. Desktop browsers only. |
 | **Code editor** | A Monaco (VS Code) editor over every generated file. Save, rebuild, done. |
-| **Integrated database** | Each app gets a managed database with no setup. Browse tables, filter, edit records, upload files, follow linked records, all from the builder. |
+| **Integrated database** | Each app gets its own SQL database, with a dev and a live copy, and no setup. Browse and edit rows, run SQL or ask in plain words, read the schema and migrations, back up and restore, all from **More → Database**. |
+| **Everything in More** | The workspace's **More** tab holds every project control: database, site analytics, usage and spending limits, project API keys and `.env`, scheduled jobs, secrets, mobile apps (Android and iOS builds, store uploads), payments with the app's own Stripe, custom domains, logs and project settings (agent instructions, MCP servers, live address, pause). |
 | **Auth and storage** | Generated apps can use accounts, roles, sessions and file uploads without you provisioning anything. |
 | **Publish** | One click puts the app on a public URL with HTTPS in about three minutes. Progress and logs are shown while it deploys. |
-| **Custom domains** | Attach your own domain with guided DNS steps and live status. |
+| **Custom domains** | Buy a domain from the builder or connect one you own with guided DNS steps and live status, then manage its DNS records and renewal. |
 | **GitHub sync** | Connect a repository and push or pull in both directions. |
 | **Figma** | Paste a Figma frame link and the agent builds from the design. |
 | **Secrets** | Environment variables per project, managed from the UI. |
@@ -199,7 +200,8 @@ The first 50 AI credits are free, enough for the first few apps. That one key co
 | Variable | Required | Purpose |
 | --- | :---: | --- |
 | `TOTALUM_VCAAS_API_KEY` | Yes | Your Totalum API key. Read on the server only, never sent to the browser. |
-| `NEXT_PUBLIC_APP_URL` | No | Public URL of your deployment, used to allow-list your origin for CSP and CORS. Defaults to the same host. |
+| `TOTALUM_API_URL` | No | The Totalum API host. Defaults to `https://builder-api.totalum.app`; change it only to point at another Totalum environment. |
+| `NEXT_PUBLIC_APP_URL` | No | Public URL of your deployment, used to allow-list your origin for CSP and CORS, and as the HTTPS address Stripe returns to after the payments setup when the builder itself runs on plain HTTP. Defaults to the same host. |
 
 `.env.local` is gitignored, so the key never ends up in a commit. The key is read in exactly one file, `src/lib/vcaas-server.ts`, which is marked server-only. Browser code talks to same-origin proxy routes under `/api/vcaas/*`, and the server adds the key before forwarding.
 
@@ -260,6 +262,7 @@ Three things worth knowing:
 - **Every Totalum call goes through one file.** The browser side is `src/lib/vcaas.ts`; the server half that holds the key is `src/lib/vcaas-server.ts`. To see how an endpoint is called, polled and error-handled, read there.
 - **Agent runs and deploys are asynchronous.** The UI polls status every 10 to 15 seconds and never assumes completion from the start response.
 - **The visual editor needs a same-origin preview.** While it is open, the project is served through `/api/preview/{projectId}` so the editor can script the document; normal viewing uses the direct URL.
+- **New projects use Totalum's current engine.** Each app gets its own SQL database (dev and live), scheduled jobs, mobile builds, payments and the rest of the **More** tab. Projects created on the legacy engine keep working (chat, preview, code, versions, secrets, domain, logs, publish); More shows them a notice, because the database explorer and those features need a current-engine project. See [Legacy projects: what differs](https://www.totalum.app/docs/api/migration-v2).
 - **Credits belong to the operator.** All actions run on the key in your environment. When it runs out, the app says so once and links to the billing page. That message is for you, not your users. Remove it before you sell this.
 
 Full API reference, written for humans and AI coding assistants alike: [www.totalum.app/totalum-api.md](https://www.totalum.app/totalum-api.md). Browsable docs: [www.totalum.app/docs](https://www.totalum.app/docs). White-label and reseller program: [www.totalum.app/whitelabel](https://www.totalum.app/whitelabel).
@@ -272,7 +275,7 @@ Full API reference, written for humans and AI coding assistants alike: [www.tota
 src/
 ├─ app/
 │  ├─ page.tsx                  # Home: centered prompt box + your projects
-│  ├─ project/[projectId]/      # Workspace: chat, preview, code, database, modals
+│  ├─ project/[projectId]/      # Workspace: chat, preview, code, more, modals
 │  └─ api/
 │     ├─ vcaas/[...path]/       # Server proxy to the Totalum API
 │     ├─ preview/[projectId]/   # Same-origin preview proxy (needed by the visual editor)
@@ -280,7 +283,9 @@ src/
 │     └─ config/                # Reports whether the API key is set
 ├─ components/
 │  ├─ brand/                    # Logo mark and wordmark
-│  └─ workspace/                # Chat, preview, code, database, GitHub, Figma, logs…
+│  └─ workspace/                # Chat, preview, code, GitHub, Figma, logs…
+│     ├─ v2/                    # The More tab: analytics, usage, keys, cron, mobile, payments, domain, settings
+│     └─ database-v2/           # The database explorer (rows, SQL, schema, migrations, backups)
 ├─ lib/
 │  ├─ brand.ts                  # Product name, tagline, links: change these to rebrand
 │  ├─ vcaas.ts                  # The API client (browser side)

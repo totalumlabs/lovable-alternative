@@ -139,6 +139,7 @@ https://builder-api.totalum.app/api/v1/vcaas    ← documented at totalum.app/to
    - **Every proxied path must stay inside `/api/v1/vcaas/`.** `resolveVcaasUrl` in `vcaas-server.ts` refuses anything that escapes. Never build an upstream URL any other way.
    - **Any server route that fetches a client-supplied URL must call `publicUrlRejectionReason`** (async, resolves DNS) from `lib/safe-url.ts`, with `redirect: "error"` and a timeout. It covers IPv4-mapped IPv6 and every private range; a host allowlist does not.
 9. **Brand strings come from `brand.ts`.** No literal product name in components, metadata or storage keys. Storage keys use the `STORAGE_PREFIX` exported there.
+10. **Projects are always created on the new Totalum engine.** Every `projects.create` / `projects.launch` sends `engineVersion: "v2"` (any account, platform or API-only); never drop it. The import/duplicate create sends no engine: it follows its export code's engine, so a legacy `.zip` code makes a legacy project, and the import dialog says so (`transfer.import.legacyCode`).
 
 ## Dependencies & security
 

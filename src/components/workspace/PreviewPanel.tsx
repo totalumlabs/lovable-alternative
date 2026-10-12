@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { RefObject } from "react";
 import { Monitor, Loader2, Archive } from "lucide-react";
+import { BuildingLoader } from "@/components/workspace/BuildingLoader";
 
 interface PreviewPanelProps {
   previewUrl: string | null;
@@ -27,9 +28,11 @@ interface PreviewPanelProps {
   proxiedSrc?: string | null;
   /** The editor needs the element to `postMessage` to its injected agent. */
   frameRef?: RefObject<HTMLIFrameElement | null>;
+  /** The run's stage in words (new engine), shown under the building loader. */
+  buildStage?: string | null;
 }
 
-export function PreviewPanel({ previewUrl, onRefresh, loading, mobilePreview = false, iframePath = "/", cached = false, proxiedSrc, frameRef }: PreviewPanelProps) {
+export function PreviewPanel({ previewUrl, onRefresh, loading, mobilePreview = false, iframePath = "/", cached = false, proxiedSrc, frameRef, buildStage }: PreviewPanelProps) {
   const [iframeLoading, setIframeLoading] = useState(true);
   /** ⚠️ The proxy wins when present — see `proxiedSrc`. */
   const base = (proxiedSrc || previewUrl || "").replace(/\/$/, "");
@@ -48,21 +51,13 @@ export function PreviewPanel({ previewUrl, onRefresh, loading, mobilePreview = f
           </div>
         )}
         {!previewUrl ? (
-          <div className="flex flex-col items-center justify-center text-center px-8">
-            {loading ? (
-              <>
-                <Loader2 className="mb-4 size-8 animate-spin text-ink-4" />
-                <p className="mb-1 text-sm font-medium text-ink-2">Building your app…</p>
-                <p className="text-xs text-ink-3">The preview appears as soon as it is ready</p>
-              </>
-            ) : (
-              <>
-                <Monitor className="mb-4 size-10 text-ink-4" />
-                <p className="mb-1 text-sm font-medium text-ink-2">No preview yet</p>
-                <p className="text-xs text-ink-3">Send a prompt to start building</p>
-              </>
-            )}
-          </div>
+          loading ? <BuildingLoader stage={buildStage} /> : (
+            <div className="flex flex-col items-center justify-center text-center px-8">
+              <Monitor className="mb-4 size-10 text-ink-4" />
+              <p className="mb-1 text-sm font-medium text-ink-2">No preview yet</p>
+              <p className="text-xs text-ink-3">Send a prompt to start building</p>
+            </div>
+          )
         ) : (
           <div className={`bg-white transition-all duration-300 relative ${
             mobilePreview ? "w-[375px] h-[667px] rounded-[2.25rem] border-[8px] border-ink overflow-hidden shadow-floating" : "w-full h-full"

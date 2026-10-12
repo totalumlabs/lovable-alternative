@@ -326,11 +326,6 @@ export default function WorkspacePage() {
   // The errands, for the mobile menu: each opens a modal rather than a tab.
   const MODAL_ENTRIES: { id: WorkspaceModal | "logs"; label: string; icon: typeof Clock }[] = [
     { id: "versions", label: "Versions", icon: Clock },
-    { id: "secrets", label: "Secrets", icon: Key },
-    { id: "domain", label: "Custom domain", icon: Globe },
-    { id: "github", label: "GitHub", icon: Github },
-    { id: "figma", label: "Figma", icon: Figma },
-    { id: "logs", label: "Logs", icon: Terminal },
   ];
 
   const [project, setProject] = useState<VcaasProject | null>(null);
@@ -1485,9 +1480,6 @@ export default function WorkspacePage() {
               (see `ChatPanel`), where the platform puts them — they act on what you are
               about to type, so they sit next to where you type it.
             */}
-            <button onClick={() => setOpenModal("secrets")} className={`flex size-8 items-center justify-center rounded-full transition-colors shrink-0 bb-hairline bg-surface-2 text-ink-3 hover:text-ink hover:bg-muted`} title={translate("workspace.secrets.title")}>
-              <Key className="w-3.5 h-3.5" />
-            </button>
             {/*
               ⭐⭐ PUBLISH — the platform's control: the button, the dialog that says what
               publishing does (public address, ~3 minutes, 1 credit) and the custom-domain

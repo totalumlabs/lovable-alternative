@@ -13,6 +13,7 @@ All notable changes to Creable are listed here. The format follows [Keep a Chang
 
 ### Added
 - Buy a custom domain from the builder, and manage a bought domain's DNS records, auto-renew, forwarding and transfer.
+- Pick where a bought domain's site answers (`www.`, `app.`, any prefix, or the bare domain) when buying or attaching it, and move it to another prefix later at no extra fee. Each address of the custom domain shows its own status; the bare domain's redirect is shown as coming soon.
 - Contribution guide, security policy, code of conduct, issue and PR templates, CI typecheck.
 - JSDoc on every exported helper under `src/lib`.
 - First public edition: the ai-app-builder-open engine restyled after the Lovable layout and palette.

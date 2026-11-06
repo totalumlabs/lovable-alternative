@@ -23,8 +23,6 @@ export const BRAND = {
   repoUrl: "https://github.com/totalumlabs/lovable-alternative",
   docsUrl: "https://www.totalum.app/docs",
   apiKeyUrl: "https://www.totalum.app/api",
-  /** Where the operator buys credits. See `InsufficientCreditsModal`. */
-  billingUrl: "https://platform.totalum.app/billing",
 } as const;
 
 /** Prefix of every localStorage / sessionStorage key this app writes. */

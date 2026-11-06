@@ -7,7 +7,8 @@
     "typecheck": "tsc --noEmit",
     "start": "next start",
     "build": "next build",
-    "test:serve": "TESTING_MODE=true PORT=3000 next start"
+    "test:serve": "TESTING_MODE=true PORT=3000 next start",
+    "test": "node --test scripts/"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

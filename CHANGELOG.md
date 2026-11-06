@@ -5,6 +5,7 @@ All notable changes to Creable are listed here. The format follows [Keep a Chang
 ## [Unreleased]
 
 ### Changed
+- When the Totalum account behind the builder runs out of credits, or reaches its plan's project limit, one modal says so and links to `https://www.totalum.app/whitelabel` (was: a "Buy credits" link to the Totalum billing page, and plain error text for the project limit). `npm test` runs its unit test.
 - The Totalum API host is `builder-api.totalum.app` (`TOTALUM_API_URL` overrides it), and the builder follows the current engine's API: agent tiers instead of model/effort, publish with `confirmDestructive`, the new deployment status fields.
 - The workspace's "Database" tab is now "More": database, analytics, usage and limits, project API keys and `.env`, scheduled jobs, secrets, mobile apps, payments, custom domain, logs and project settings. New-engine projects only.
 

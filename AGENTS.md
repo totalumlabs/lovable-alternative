@@ -186,7 +186,7 @@ See https://www.totalum.app/whitelabel for the program and pricing.
 1. Env: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_ID_*`.
 2. `POST /api/billing/checkout`: Checkout Session with `client_reference_id = user.id`.
 3. `POST /api/billing/webhook`: verify the signature; on `checkout.session.completed` / `invoice.paid`, `profiles.credits += pack_size`. Idempotent on the event id.
-4. Gate spending in the catch-all before forwarding: on spend-shaped paths (`agent/start`, `projects/launch`, `deployments/deploy`, `versions/*/recover`, `agent/server/start-or-restart`, `domain`, `files/*`, `rebuild`) with `profiles.credits <= 0`, return `{ ok: false, code: "INSUFFICIENT_CREDITS" }` with 402. The UI opens `TotalumLimitModal` (`lib/totalum-limit.ts`); point it at your checkout.
+4. Gate spending in the catch-all before forwarding: on spend-shaped paths (`agent/start`, `projects/launch`, `deployments/deploy`, `versions/*/recover`, `agent/server/start-or-restart`, `domain`, `files/*`, `rebuild`) with `profiles.credits <= 0`, return `{ ok: false, code: "INSUFFICIENT_CREDITS" }` with 402. Give that refusal its own modal pointing at your checkout: `TotalumLimitModal` (`lib/totalum-limit.ts`) opens only on Totalum's own codes (`upstreamCode`), i.e. when the operator's Totalum account is out of credits or projects.
 5. Meter per prompt when `agent/status` reports `done` (`creditsSpent` is on the response), or use Totalum's webhooks. Reconcile against `GET /api/v1/credits/spending-analytics?projectId=`.
 
 ## Boundaries
